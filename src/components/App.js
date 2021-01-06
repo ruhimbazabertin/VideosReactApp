@@ -1,16 +1,28 @@
 import React from 'react';
-import SearBar from '../components/SearchBar'
+import SearBar from './SearchBar';
+import Youtube from './apis/youtube';
+import VideoList from './VideoList';
 
 class App extends React.Component{
     state = {
-        term : '',
-    }   
-    //setState();
-
+        videos : []
+    }
+    
+    onVideoSearch = async (term) => {
+      const response = await Youtube.get('/search',{
+          params: {
+              q: term,
+          }
+      });
+         this.setState({videos: response.data.items});
+        };
+        
 render(){
     return(
         <div className="ui container">
-            <SearBar/>
+            <SearBar onSearch={this.onVideoSearch}/>
+            {/* Wiring VideoList component in App */}
+            <VideoList videos={this.state.videos}/>
             </div>
     )
 }
