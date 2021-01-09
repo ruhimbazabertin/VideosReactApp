@@ -10,17 +10,23 @@ class App extends React.Component{
         selectedVideo: null,
     }
     
+    //componentDidMount(){
+     //   this.onVideoSearch('Buildings');
+    //}
+
     onVideoSearch = async (term) => {
       const response = await Youtube.get('/search',{
           params: {
               q: term,
           }
       });
-         this.setState({videos: response.data.items});
+         this.setState({
+             videos: response.data.items,
+             selectedVideo: response.data.items[0]
+            });
         };
      onVideoSelect = video => {
          this.setState({selectedVideo: video});
-         console.log('Video Selected is:', this.state.selectedVideo);
      }   
         
 render(){
@@ -28,9 +34,20 @@ render(){
         <div className="ui container">
             <SearBar onSearch={this.onVideoSearch}/>
             {/* Wiring VideoDetail component in App */}
-            <VideoDetail video={this.onVideoSelect} />
+            <div className="ui grid">
+            <div className="ui row">
+            <div className="eleven wide column">
+            <VideoDetail video={this.state.selectedVideo} />
+            </div>
             {/* Wiring VideoList component in App */}
-            <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect} />
+            <div className="five wide column">
+            <VideoList 
+            videos={this.state.videos} 
+            onVideoSelect={this.onVideoSelect} 
+                />
+                </div>
+                </div>
+                </div>
             </div>
     )
 }
